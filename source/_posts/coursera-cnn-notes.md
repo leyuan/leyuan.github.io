@@ -1,5 +1,5 @@
 ---
-title: coursera-cnn-notes
+title: Coursera Deep Learning Course4 - CNN Notes
 date: 2018-02-21 23:46:35
 tags:
 math: true
