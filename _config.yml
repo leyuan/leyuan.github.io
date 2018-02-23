@@ -81,10 +81,5 @@ deploy:
   repo: git@github.com:leyuan/leyuan.github.io.git
   branch: master
 
-backup:
-    type: git
-    repository:
-       github: git@github.com:leyuan/leyuan.github.io.git,dev
-
  # Disqus comments
 disqus_shortname: https-leyuan-github-io
