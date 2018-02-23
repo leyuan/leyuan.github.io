@@ -1,10 +1,9 @@
 ---
-title: Sequence Model
+title: Sequence Model(Chinese)
 date: 2018-02-19 00:14:09
 tags:
 math: true
 ---
-# 序列模型（Sequence Model)
 
 作者：Leyuan Yu, Ji Yang
 

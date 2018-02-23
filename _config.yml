@@ -3,16 +3,16 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Wybzcd
-subtitle:
-description:
-author: John Doe
-language:
-timezone:
+title: Leyuan's Blog
+subtitle: Wybzcd
+description: Learning...
+author: Leyuan Yu
+language: English, Chinese
+timezone: Canada/Mountain
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://leyuan.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -81,5 +81,11 @@ deploy:
   repo: git@github.com:leyuan/leyuan.github.io.git
   branch: master
 
+backup:
+    type: git
+    repository:
+       github: git@github.com:leyuan/blog.git,master
+       gitcafe: git@github.com:leyuan/blog.git,master
+
  # Disqus comments
-disqus_shortname: Leyuan-Github
+disqus_shortname: https-leyuan-github-io
