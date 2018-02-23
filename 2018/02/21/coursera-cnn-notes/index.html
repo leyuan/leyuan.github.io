@@ -1,11 +1,68 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="telephone=no" name="format-detection"/><meta name="description"/><title>coursera-cnn-notes | Wybzcd</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"/><link rel="stylesheet" type="text/css" href="/css/highlight.css"/><link rel="stylesheet" type="text/css" href="/css/font.css"/><link rel="stylesheet" type="text/css" href="/css/noise.css"/><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"/><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"/></head><body><article class="wrapper"><div class="post-main"><div class="nav"><nav class="container"><a class="sidebar-nav-item active" href="/">Home</a><a class="sidebar-nav-item" href="/archives">Archives</a></nav><div class="container post-meta"><div class="post-time">2018-02-21</div></div></div><div class="container post-header"><h1>coursera-cnn-notes</h1></div><div class="container post-content"><h3 id="Week-One"><a href="#Week-One" class="headerlink" title="Week One"></a>Week One</h3><h3 id="Padding"><a href="#Padding" class="headerlink" title="Padding"></a>Padding</h3><p>6x6 matrix, filter size 3x3 =&gt; 4x4 matrix</p>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="telephone=no" name="format-detection"/><meta name="description"/><title>Coursera Deep Learning Course4 - CNN Notes | Wybzcd</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"/><link rel="stylesheet" type="text/css" href="/css/highlight.css"/><link rel="stylesheet" type="text/css" href="/css/font.css"/><link rel="stylesheet" type="text/css" href="/css/noise.css"/><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"/><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"/></head><body><article class="wrapper"><div class="post-main"><div class="nav"><nav class="container"><a class="sidebar-nav-item active" href="/">Home</a><a class="sidebar-nav-item" href="/archives">Archives</a></nav><div class="container post-meta"><div class="post-time">2018-02-21</div></div></div><div class="container post-header"><h1>Coursera Deep Learning Course4 - CNN Notes</h1></div><div class="container post-content"><h3 id="Week-One"><a href="#Week-One" class="headerlink" title="Week One"></a>Week One</h3><h3 id="Padding-Convolution-one-of-convolution-block"><a href="#Padding-Convolution-one-of-convolution-block" class="headerlink" title="Padding Convolution(one of convolution block)"></a>Padding Convolution(one of convolution block)</h3><p>6x6 matrix, filter size 3x3 =&gt; 4x4 matrix</p>
 <p>problems:</p>
 <ol>
 <li>image is shrinking everytime so fast</li>
 <li>corner pixel only used once, middle pixel used too much</li>
 </ol>
+<p>So paddings are needed. Valid Padding: No Padding</p>
+<p>Same Padding: Pad so output size is the same as the input size, to make this happen the following equations needs to be satisfied</p>
+<p>$n + 2p -f +1 = n$</p>
+<p>$p = \dfrac{f-1}{2}$</p>
+<p>By convention f is almost always <code>odd</code></p>
+<h3 id="Strided-Convolution-one-of-convolution-block"><a href="#Strided-Convolution-one-of-convolution-block" class="headerlink" title="Strided Convolution(one of convolution block)"></a>Strided Convolution(one of convolution block)</h3><p>Summary of convolutions</p>
+<p>n x n image // f x f filter // padding p // stride s</p>
+<p>After convolution:</p>
+<p>$\left \lfloor{\dfrac{n+2p-f}{s} + 1}\right \rfloor$ x $\left \lfloor{\dfrac{n+2p-f}{s} + 1}\right \rfloor$</p>
+<h3 id="Convolutions-Over-Volume"><a href="#Convolutions-Over-Volume" class="headerlink" title="Convolutions Over Volume"></a>Convolutions Over Volume</h3><p>Image has 3 channels R, G, B, fitlers have 3 channels as well.</p>
+<p>If rgb filter is designed carefully, it can be used to only detect vertical red edge or generally vertical edges.</p>
+<p>On top of above, multiple filters can be stacked together to perform different purpose of detections.</p>
+<h3 id="One-Layer-of-a-Convolutional-Network"><a href="#One-Layer-of-a-Convolutional-Network" class="headerlink" title="One Layer of a Convolutional Network"></a>One Layer of a Convolutional Network</h3><p>If layer l is a convolution layer:</p>
+<p>$f^{[l]}$ = fitler size</p>
+<p>$p^{[l]}$ = padding</p>
+<p>$s^{[l]}$ = stride</p>
+<p>$n_c^{[l]}$ = number of filters</p>
+<p>Each filter is: $f^{[l]} \times f^{[l]} \times n_c^{[l-1]}$</p>
+<p>Activations: $a^{[l]}$</p>
+<p>Weights: $f^{[l]} \times f^{[l]} \times n_c^{[l-1]} \times n_c^{[l]}$</p>
+<p>bias: $n_c^{[l]}$ - (1, 1, 1, $n_c^{[l]}$)</p>
+<p>Input: $n_H^{[l-1]} \times n_W^{[l-1]} \times n_c^{[l-1]}$</p>
+<p>Output: $n_H^{[l]} \times n_W^{[l]} \times n_c^{[l}$</p>
+<p>$n_{H/W}^{[l]} = \left \lfloor{\dfrac{n_{H/W}^{[l-1]} +2p^{[l]} - f^{[l]}}{s^{[l]}} + 1}\right \rfloor$</p>
+<h3 id="Simple-Convolutional-Network-Example"><a href="#Simple-Convolutional-Network-Example" class="headerlink" title="Simple Convolutional Network Example"></a>Simple Convolutional Network Example</h3><p><img src="images/xxx" alt="image"></p>
+<p>Types of layer in CNN</p>
+<ul>
+<li>Convolution</li>
+<li>Pooling</li>
+<li>Fully Connected</li>
+</ul>
+<h3 id="Pooling-Layer"><a href="#Pooling-Layer" class="headerlink" title="Pooling Layer"></a>Pooling Layer</h3><ul>
+<li>Max pooling</li>
+</ul>
+<p>A bigger number likely represents the feature that we want to detect, the max operator captures the feature in the particular region.</p>
+<p>Hyperparameters, NO parameters to learn.</p>
+<ul>
+<li>Average Pooling</li>
+</ul>
+<p>Collapse the features into an average number.</p>
+<h3 id="Why-Convolutions"><a href="#Why-Convolutions" class="headerlink" title="Why Convolutions"></a>Why Convolutions</h3><p><strong>Parameter Sharing</strong>: # of parameters in a Conv layer is much less than the # of parameters in a FC layer. A feature detecor(such as vertical edge detector) that’s useful in one part of the image is probably useful in another part of the image.</p>
+<p><strong>Sparsity of connections</strong>: In each layer, each output value depends only on a samll number of inputs. For a particular area, the rest part of the image does not contribute to its features.</p>
 <hr>
-</div></div><div class="post-main post-comment"></div></article><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css"/><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script><script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script>$(document).ready(function() {
+</div></div><script type="text/x-mathjax-config">
+   MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><div class="post-main post-comment"></div></article><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css"/><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script><script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script>$(document).ready(function() {
     $(".fancybox").fancybox();
 });
 </script></body></html>
