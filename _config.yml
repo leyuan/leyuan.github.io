@@ -80,3 +80,6 @@ deploy:
   type: git
   repo: git@github.com:leyuan/leyuan.github.io.git
   branch: master
+
+ # Disqus comments
+disqus_shortname: Leyuan-Github
