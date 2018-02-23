@@ -84,7 +84,7 @@ deploy:
 backup:
     type: git
     repository:
-       github: git@github.com:leyuan/blog.git,master
+       github: git@github.com:leyuan/leyuan.github.io.git,dev
 
  # Disqus comments
 disqus_shortname: https-leyuan-github-io
