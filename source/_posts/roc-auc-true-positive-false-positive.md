@@ -1,5 +1,5 @@
 ---
-title: ROC, AUC, True Positive, False Negative
+title: ROC, AUC, True Positive, False Positive
 date: 2018-02-22 20:43:51
 tags:
 math: true
