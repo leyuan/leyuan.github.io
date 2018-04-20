@@ -1,0 +1,182 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="telephone=no" name="format-detection"/><meta name="description" content="Learning..."/><title>Coursera-NLP-Specialization | Leyuan's Blog</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"/><link rel="stylesheet" type="text/css" href="/css/highlight.css"/><link rel="stylesheet" type="text/css" href="/css/font.css"/><link rel="stylesheet" type="text/css" href="/css/noise.css"/><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"/><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"/></head><body><article class="wrapper"><div class="post-main"><div class="nav"><nav class="container"><a class="sidebar-nav-item active" href="/">Home</a><a class="sidebar-nav-item" href="/archives">Archives</a></nav><div class="container post-meta"><div class="post-tags"><a class="post-tag-link" href="/tags/code-tutorial-nlp/">code tutorial nlp</a></div><div class="post-time">2018-03-12</div></div></div><div class="container post-header"><h1>Coursera-NLP-Specialization</h1></div><div class="container post-content"><h3 id="Week-One"><a href="#Week-One" class="headerlink" title="Week One"></a>Week One</h3><p>Main approaches in NLP</p>
+<ol>
+<li>rule-based methods (e.g: regular expression)</li>
+<li>traditional machine learning</li>
+<li>deep learning</li>
+</ol>
+<p>Example: Semantic slot filling: CFG(context-free grammer)</p>
+<p>rule based methods</p>
+<ul>
+<li>linguistic feature</li>
+<li>high precision, low recall</li>
+</ul>
+<p>machine learning</p>
+<ul>
+<li>training corpus</li>
+<li>label data, feature engineering</li>
+<li>probability model</li>
+</ul>
+<p>deep learning</p>
+<ul>
+<li>big training corpus</li>
+<li>no feature generation</li>
+<li>defining the model</li>
+<li>training and inference</li>
+</ul>
+<p>NLP Pyramid</p>
+<p>[img: nlp-model]</p>
+<p>Morphology（词态）: different forms of words - different gender, tenses, etc…</p>
+<p>Syntax（语法）: different relations about words in a sentence - object, subject, …</p>
+<p>Semantics（语义）: the meaning of a word, phrase, sentence, or text.</p>
+<p>Pragmatics（词用）: how to use different components of a language</p>
+<p>(the branch of linguistics dealing with language in use and the contexts in which it is used, including such matters as deixis, taking turns in conversation, text organization, presupposition, and implicature.)</p>
+<p>Some Linguistic Knowledge</p>
+<p>hyponym</p>
+<p>hypernym</p>
+<p>meronyms</p>
+<p>DAG(dynamic acyclic graph)-LSTM</p>
+<p>dependency tree</p>
+<p>constituency trees</p>
+<ul>
+<li>name entity recognition</li>
+<li>sentiment analysis</li>
+</ul>
+<p>[img: sentiment-analysis]</p>
+<h3 id="Text-Classification"><a href="#Text-Classification" class="headerlink" title="Text Classification"></a>Text Classification</h3><p><strong>Text Preprocessing</strong></p>
+<p>Input: text of review<br>Output: class of sentiment</p>
+<ul>
+<li>e.g 2 classes: positive vs negative (could be more, like “neutral”)</li>
+</ul>
+<p>What is text? It is a sequence of …</p>
+<ul>
+<li>characters</li>
+<li>words</li>
+<li>phrases and named entities</li>
+<li>sentences</li>
+<li>paragraphs</li>
+</ul>
+<p>Tokenization - is a process that splits an input seuqence into so-called tokens</p>
+<p>By white space? Punctuations? Better with combined rules.</p>
+<p>(python package: nltk)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> nltk</span><br><span class="line">text = <span class="string">"This is Leyuan's text, isn't it?"</span></span><br><span class="line"></span><br><span class="line">tokenizer = nltk.tokenize.TreebankWordTokenizer()</span><br><span class="line">tokenizer.tokenize(text)</span><br></pre></td></tr></table></figure>
+<p>Token normalizations</p>
+<p>We may want the same token for different forms of the word</p>
+<p>e.g: wolf, wolves -&gt; wolf or talk, talks -&gt; talk</p>
+<ul>
+<li>stemming</li>
+</ul>
+<p>a process of removing and replacing suffixes to get to the root form of the word, which is called the <strong>stem</strong></p>
+<p>usually refers to heuristics that chop off suffixes</p>
+<p>e.g: Porter’s stemmer</p>
+<p>SSES -&gt; SS caresses -&gt; caress<br>IES -&gt; I ponies -&gt; poni<br>SS -&gt; SS caress -&gt; caress<br>S -&gt; [space] cats -&gt; cat</p>
+<p>but it fails on irregular forms, produces non-words</p>
+<ul>
+<li>lemmatization</li>
+</ul>
+<p>usually referes to doing things properly with the use of a vocabulary and morphological analysis</p>
+<p>returns the base or dictionary form of a word, which is known as the <strong>lemma</strong></p>
+<p>e.g:</p>
+<p>feet -&gt; foot cats -&gt; cat<br>wolves -&gt; wolf talked -&gt; talked</p>
+<p>problems: not all forms are reduced</p>
+<p>tips: try both and choose the best for our task</p>
+<p>Further normalization</p>
+<ul>
+<li><p>capital letters</p>
+<ul>
+<li>Us, us, US(country)<br>heuristics:<ul>
+<li>lowercasing the beginning of the sentecne</li>
+<li>lowercasing words in titles</li>
+<li>leave mid-sentence words as they are</li>
+</ul>
+</li>
+<li>or we can use machine learning to retrieve true casing -&gt; HARD</li>
+</ul>
+</li>
+<li><p>Acronyms</p>
+<ul>
+<li>eta, e.t.a, E.T.A -&gt; E.T.A</li>
+<li>we can write a bunch of regular expression -&gt; HARD</li>
+</ul>
+</li>
+</ul>
+<p><strong>Feature extraction from text</strong></p>
+<ul>
+<li>Transform tokens into words</li>
+</ul>
+<p>Bag of words(BOW) - count occurrences of a particular token in our text</p>
+<p>motivation: we’re looking for marker words like “excellent” or “disppointed”</p>
+<p>text vetorizaiton:</p>
+<p>[img - text-vector]</p>
+<p>problems:</p>
+<ul>
+<li>we lose word order, hence the name “bag of words”</li>
+<li>counters are not normailized</li>
+</ul>
+<p>fix ordering</p>
+<p>n-grams</p>
+<ul>
+<li>1-grams for tokens</li>
+<li>2-grams for token pairs</li>
+</ul>
+<p>[img: n-gram]</p>
+<p>problems:</p>
+<ul>
+<li>too many features</li>
+</ul>
+<p>fix too many features</p>
+<p>Remove some n-grams</p>
+<p>Step 1</p>
+<ul>
+<li>remove high frequencey n-grams: stop words</li>
+<li>remove low frequencey n-grams: typos, rare n-grams(easily overfit)</li>
+<li>medium frequency n-grams: goto Step 2</li>
+</ul>
+<p>Step 2</p>
+<p>remove some of the bad medium frequencey n-grams</p>
+<p>idea: the n-gram with smaller frequncey can be more discriminating because it can capture a specific issue in the review</p>
+<p>TF-IDF</p>
+<p>Term frequencey(TF)</p>
+<ul>
+<li>tf(t, d) - frequencey for term (or n-gram) t in document d</li>
+<li>Variants:</li>
+</ul>
+<p>[img: table-tf]</p>
+<p>Inverse document frequencey(IDF)</p>
+<ul>
+<li>N = |D| total number of documents in corpus</li>
+<li>|{d c- D: t c- d}| number of documents where the term t appears</li>
+<li>idf(t, D) = log N/|{d c- D: t c- d}|</li>
+</ul>
+<p>TF-IDF</p>
+<ul>
+<li>tfidf(t, d, D) = tf(t, d) * idf(t, D)</li>
+<li>A high weight in TF-IDF is reached by a high term frequency (in the give document) but a low document frequency of the term in the whole collection of documents</li>
+</ul>
+<p>Better BOW</p>
+<ul>
+<li>replace counters with TF-IDF</li>
+<li>Normailize the result row-wise(dived by L_2-norm)</li>
+</ul>
+<p>[img: better-BOW]</p>
+<p>[code: Python TF-IDF]</p>
+<p><strong>Linear models for sentiment analysis</strong></p>
+<ul>
+<li>dataset: IMDB movie reviews dataset</li>
+</ul>
+<p>1-grams</p>
+</div></div><div class="post-main post-comment"><div id="disqus_thread"></div><script type="text/javascript">
+var disqus_shortname = 'https-leyuan-github-io';
+var disqus_identifier = '2018/03/12/Coursera-NLP-Specialization/';
+var disqus_title = 'Coursera-NLP-Specialization';
+var disqus_url = 'https://leyuan.github.io/2018/03/12/Coursera-NLP-Specialization/';
+(function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">Blog comments powered by <span class="logo-disqus">Disqus</span></a></div></article><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css"/><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script><script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script>$(document).ready(function() {
+    $(".fancybox").fancybox();
+});
+</script></body></html>
