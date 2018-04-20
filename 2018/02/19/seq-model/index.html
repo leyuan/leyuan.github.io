@@ -5,15 +5,15 @@
 </blockquote>
 <p>最直观的理解是在CNN对图片的分析基础上，RNN可以对视频进行分析，这里也就引入了第三维“时间”的概念。</p>
 <p>另外这篇笔记意在做一个概述和科普，如果想看更多的细节和推导过程请参考我们的<a href="https://kulbear.github.io/pdf/sequence-models.pdf" target="_blank" rel="noopener">英文原版笔记</a></p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-examples.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-examples.png" alt="examples of sequence model"></p>
 <hr>
 <h3 id="第一周"><a href="#第一周" class="headerlink" title="第一周"></a>第一周</h3><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>这一小节通过一个小例子为我们打开序列模型的大门，例子如下：</p>
 <p>给出这样一个句子 “Harry Potter and Herminone Granger invented a new spell.”(哈利波特与赫敏格兰杰发明了一个新的咒语。)， 我们的任务是在这个句子中准确的定位到人名 Harry Potter 和 Herminone Granger. 用深度学习的语言来描述如下图 - 每一个单词对应一个输出0或者1，1代表着是人名，0代表不是。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-motivate.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-motivate.png" alt="examples of sequence model"></p>
 <p>接下来我们要解决的一个问题是如何才能代表一个单词，比如我们例子中的“Harry”，如果每个单词都直接使用的话一是英文总体单词量太大，二是对机器来说输入的每个单词长度应该是一致的。 所以这里我们介绍一种新的编码方式， 就是用另一种方式来代表每一个单词 - <strong>独热编码（One-Hot Encoding）</strong>。 具体流程是这样，假设我们有10000个常用词，为其构建一个10000*1 的矩阵(column matrix)，假如第一个词是苹果(apple), 那么对应的第一个位置为1，其他都为0，所以称之为独热。这样每个单词都有对应的矩阵进行表示，如果这个词没有出现在我们的字典中，那么我们可以给一个特殊的符号代替，常用的是 <code>[UNK]</code> (unknown)</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-one-hot.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-one-hot.png" alt="examples of sequence model"></p>
 <h3 id="序列模型概览"><a href="#序列模型概览" class="headerlink" title="序列模型概览"></a>序列模型概览</h3><p> RNN模型可以用下图表示</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-rnn.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-rnn.png" alt="examples of sequence model"></p>
 <p><code>Tx</code>，<code>Ty</code>是时间单位, 这里统称为“时刻”，在这例子中对应不同时刻是输入的第几个单词，<code>x</code>是“输入值”，例子中是当前时刻的单词（以独热编码的形式），<code>y</code>是“输出值”0或者1，<code>a</code>称为激活值用于将前一个单元的输出结果传递到下一个单元，<code>Wax</code> <code>Way</code> <code>Waa</code> 是不同的“权重矩阵”也就是我们神经网络update的值。每一个单元有两个输入，$a^{[Tx-1]}$ 和 <code>x</code>，有两个输出$a^{[Tx]}$ 和 <code>y</code>. 图中没有出现的g是“激活函数”。</p>
 <table>
 <thead>
@@ -52,18 +52,18 @@
 <p>$\hat{y}^{[1]} = g_2(W_{ya}a^{[1]} + b_y)$</p>
 <p>$a^{[t]} = g(W_{aa}a^{t-1} + W_{ax}x^{t} + b_a)$</p>
 <p>$\hat{y}^{[t]} = g(W_{ya}a^{[t]} + b_y)$</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-forward.png" alt="forward propagation"></p>
+<p><img src="/images/seq-model/w1-forward.png" alt="forward propagation"></p>
 <h3 id="反向传播-Backpropagation"><a href="#反向传播-Backpropagation" class="headerlink" title="反向传播(Backpropagation)"></a>反向传播(Backpropagation)</h3><p>RNN的反向传播通常都由类似Tensorflow, Torch之类的库或者框架帮你完成，不过感官上和普通神经网络类似，算梯度值然后更新权重矩阵。更多信息请参考原版笔记。</p>
 <h3 id="RNN的不同应用领域"><a href="#RNN的不同应用领域" class="headerlink" title="RNN的不同应用领域"></a>RNN的不同应用领域</h3><p>序列模型对输入与输出的长度没有要求，在常见的例子中，机器翻译就是多个输入与多个输出，简称“多对多”， 语音识别可视为“单对多”， 它的反例是音乐生成-“单对多”。课程中介绍了多种可能的RNN模式，我们用下面一张图概括：</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-structures.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-structures.png" alt="examples of sequence model"></p>
 <p>不同的结构给了我们更多的可能性。</p>
 <h3 id="语言模型-amp-序列生成"><a href="#语言模型-amp-序列生成" class="headerlink" title="语言模型 &amp; 序列生成"></a>语言模型 &amp; 序列生成</h3><ul>
 <li>什么是<strong>语言模型（Language Modelling）</strong></li>
 </ul>
 <p>在语音识别中，这两句话听起来几乎一摸一样。但如果是人为判断这一句话，瞬间就可以判定应该翻译成第二句。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-language-example.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-language-example.png" alt="examples of sequence model"></p>
 <p>那么机器该如何识别呢？可以通过构建语言模型我们可以预测每句话出现的概率是多少来进行甄别</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-probability.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-probability.png" alt="examples of sequence model"></p>
 <ul>
 <li>如何用RNN训练一个语言模型</li>
 </ul>
@@ -76,7 +76,7 @@
 <p> $L(\hat{y}^{[t]}$, $y^{[t]}) = - \sum_i y_i^{[t]}log \hat{y}_i^{[t]}$</p>
 <p> $L = \sum_t L^{[t]}(\hat{y}^{[t]}, y^{[t]})$</p>
 <h3 id="语言模型的取样-Sampling"><a href="#语言模型的取样-Sampling" class="headerlink" title="语言模型的取样(Sampling)"></a>语言模型的取样(Sampling)</h3><p>在训练好模型之后，可以通过取样的方式来对模型做一个简单的评测，方法如下：</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-rnn-sample.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-rnn-sample.png" alt="examples of sequence model"></p>
 <p>在每一步输出y时，通常使用<code>softmax</code>作为激活函数，然后根据输出的分布，随机选择一个值，也就是对应的一个字或者英文单词。然后将这个值作为下一个单元的x输入进去直到我们输出了终结符[EOS]，或者输出长度超过了提前的预设值n.</p>
 <h3 id="RNN的梯度消失、爆炸问题"><a href="#RNN的梯度消失、爆炸问题" class="headerlink" title="RNN的梯度消失、爆炸问题"></a>RNN的梯度消失、爆炸问题</h3><p>梯度值在RNN中也可能因为反向传播的层次太多导致过小或者过大。当梯度值过小的时候，神经网络将无法有效地调整自己的权重矩阵导致训练效果不佳，称之为“梯度消失问题”(gradient vanishing problem)；过大时可能直接影响到程序的运作因为程序已经无法存储那么大的值，直接返回<code>NaN</code>，称之为“梯度爆炸问题”(gradient exploding problem)。</p>
 <p>当梯度值<strong>过大</strong>的时候有一个比较简便的解决方法，每次将返回的梯度值进行检查，如果超出了预定的范围，则手动设置为范围的边界值。</p>
@@ -85,7 +85,7 @@
 <p>“The <strong>cat</strong>，which already <strong>ate</strong> apple，yogurt，banana，…, <strong>was</strong> full.”</p>
 <p>将在接下来的两个章节介绍两种方法来解决梯度过小问题，目标是当一些重要的单词离得很远的时候，比如例子中的“cat”和“was”，能让语言模型准确的输出单数人称过去时的“was”，而不是“is”或者“were”. 两个方法都将引入“记忆”的概念，也就是为RNN赋予一个记忆的功能</p>
 <h3 id="GRU"><a href="#GRU" class="headerlink" title="GRU"></a>GRU</h3><p>GRU（Gated Recurrent Unit）是一种用来解决梯度值过小的方法，首先来看下在一个时刻下的RNN单元，激活函数为<code>tanh</code></p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-rnn-unit.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-rnn-unit.png" alt="examples of sequence model"></p>
 <p>这里引入两个新的符号c和Gamma($\Gamma$)：</p>
 <p>c (memory Cell) - 记忆单元，用它来记住“cat”是单数而不是复数，GRU中$c^{[t]} = a^{[t]}$</p>
 <p>在每一时刻（RNN单元内），计算候选c值</p>
@@ -94,9 +94,9 @@
 <p>这里因为使用的激活函数是sigmoid，所以$\Gamma_u$的值可以看做非1即0. 接下来是一个重要的公式，决定了什么时候更新c值，也就是用 $\tilde c$ 替换 $c$</p>
 <p>$c^{[t]} = \Gamma_u <em> \tilde c^{[t]} + (1 - \Gamma_u) </em> c^{[t-1]}$</p>
 <p>加入了这两个概念以后，单元就变成了这个样子</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-gru-unit.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-gru-unit.png" alt="examples of sequence model"></p>
 <p>希望达到的效果，在读到“cat”的时候$\Gamma_u = 1$，其他时候一直为0，知道要输出“was”的时刻我们仍然知道“cat”的存在，也就知道它为单数了。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-gru-expect.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-gru-expect.png" alt="examples of sequence model"></p>
 <p>上述是简化了的GRU，在完整版中还存在另一个符号$\Gamma_r$，这个符号的意义是控制$c^{[t-1]}$和$\tilde c^{[t]}$之间的联系强弱，完整版公式如下：</p>
 <p>$\Gamma_u = \sigma(W_u[c^{[t-1], x^{t}}] + bu)$</p>
 <p>$\Gamma_r = \sigma(W_r[c^{[t-1], x^{t}}] + br)$</p>
@@ -109,16 +109,16 @@
 <p>$\Gamma_o = \sigma(W_o[a^{[t-1]}, x^{[t]}] + b_o)$</p>
 <p>$c^{[t]} = \Gamma_u <em> \tilde c^{[t]} + \Gamma_f </em> c^{[t-1]}$</p>
 <p>$a^{[t]} = \Gamma_o * c^{[t]}$</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-lstm-unit.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-lstm-unit.png" alt="examples of sequence model"></p>
 <p>业界普遍认为LSTM要比GRU的效果更好，但是实际上这两种方法都有很广泛的应用。目前为止已经将搭建RNN的基础部分了解的差不多了，接下来是稍微详细的讲解了两种RNN的延伸版本，双向RNN 和 深度RNN.</p>
 <h3 id="双向RNN"><a href="#双向RNN" class="headerlink" title="双向RNN"></a>双向RNN</h3><p>比如下面两句话</p>
 <p>He said, “Teddy Roosevelt was a great President”.</p>
 <p>He said, “Teddy bears are on sale”.</p>
 <p>第一句中的Teddy Roosevelt是人名，但第二句中的Teddy bears是泰迪熊，同样都是单词Teddy对应的输出在第一句中应该是1，第二句中应该是0。像这样的例子如果想让我们的序列模型明白就需要借助不同的结构比如 - 双向递归神经网络(Bidirectional RNN)。神经网络首先从正面理解一遍这句话，再从反方向理解一遍。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-rnn-bidirect.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-rnn-bidirect.png" alt="examples of sequence model"></p>
 <p>这样的好处就是更好的理解了我们所说的“语境”，以便区分开两个不同Teddy的含义。</p>
 <h3 id="深层RNN-Deep-RNN"><a href="#深层RNN-Deep-RNN" class="headerlink" title="深层RNN(Deep RNN)"></a>深层RNN(Deep RNN)</h3><p>有的时候为了得到更好的结果，需要叠加很多个RNN在一起，这种网络我们称之为深层RNN</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w1-deep-rnn.png" alt="examples of sequence model"></p>
+<p><img src="/images/seq-model/w1-deep-rnn.png" alt="examples of sequence model"></p>
 <p>比如我们要计算 $a^{[2][3]}$，则</p>
 <p>$a^{[2][3]} = g(W_a^{[2]}[a^{[2][2]}, a^{[1][3]}] + b_{a[3]})$</p>
 <hr>
@@ -171,7 +171,7 @@
 </table>
 <p>在表格中可以看到不同的词语对应着不同的特性有不同的系数值，代表着这个词语与当前特性的关系。括号里的数字代表这个单词在独热编码中的位置，可以用这个数字代表这个单词比如 Man = <strong>$O_{5391}$</strong>，Man的特性用 <strong>$e_{5391}$</strong>，也就是那一纵列。在实际的应用中，特性的数量远不止4种，可能有几百种，甚至更多。对于单词“orange”和“apple”来说他们会共享很多的特性，比如都是水果，都是圆形，都可以吃，也有些不同的特性比如颜色不同，味道不同，但因为这些特性让RNN模型理解了他们的关系，也就增加了通过学习一个单词去预测另一个的可能性。</p>
 <p>这里还介绍了一个<code>t-SNE</code>算法，因为词性表本身是一个很高维度的空间，通过这个算法压缩到二维的可视化平面上，每一个单词<code>嵌入</code>属于自己的一个位置，相似的单词离的近，没有共性的单词离得远，这个“嵌入”的概念就是下一节的内容<code>词嵌(word embeddings)</code></p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-word-relation.png" alt="word-relations"></p>
+<p><img src="/images/seq-model/w2-word-relation.png" alt="word-relations"></p>
 <h3 id="使用词嵌"><a href="#使用词嵌" class="headerlink" title="使用词嵌"></a>使用词嵌</h3><p>先下一个非正规定义 “词嵌 - 描述了词性特征的总量，也是在高维词性空间中嵌入的位置，拥有越多共性的词，词嵌离得越近，反之则越远”。值得注意的是，表达这个“位置”，需要使用所有设定的词性特征，假如有300个特征（性别，颜色，…），那么词嵌的空间维度就是300.</p>
 <p>使用词嵌主要通过以下三步：</p>
 <ol>
@@ -182,19 +182,19 @@
 <h3 id="词嵌的特征"><a href="#词嵌的特征" class="headerlink" title="词嵌的特征"></a>词嵌的特征</h3><p>假设有如下的问题：</p>
 <p><code>&quot;Man&quot; -&gt; &quot;Woman&quot; 那么 &quot;King&quot; -&gt; ？</code></p>
 <p>这个问题被称作词汇的类比问题，通过研究词嵌的特征可以解决这样的问题。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-word-analogy.png" alt="words-anlogy"></p>
+<p><img src="/images/seq-model/w2-word-analogy.png" alt="words-anlogy"></p>
 <p>数学的表达式为：</p>
 <p>$e_{man} - e_{woman} \approx e_{king} - e_w$</p>
 <p>$e_w$是什么呢？ 在高纬度空间中（300D）</p>
 <p>$argmax_w sim(e_w, e_{king} - e_{man} + e_{woman})$</p>
 <p>这个公式相当于在算两个向量(vector)的cos相似度</p>
 <p>$sim(u,v) = \dfrac{u^Tv}{||u||_2|||v||_2}$</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-vector-sim.png" alt="vector-similarity"></p>
+<p><img src="/images/seq-model/w2-vector-sim.png" alt="vector-similarity"></p>
 <h3 id="词嵌矩阵"><a href="#词嵌矩阵" class="headerlink" title="词嵌矩阵"></a>词嵌矩阵</h3><p>这一节中主要讲了词嵌矩阵的shape，如果词嵌（词性特征的总量）是300，独热编码的长度是10000，那么词嵌矩阵的的shape就是<code>300 * 10000</code>。所以就有了下面的式子：</p>
 <p><code>词嵌矩阵 * 单词的独热编码 = 单词的词嵌</code></p>
 <p><code>(300, 10000) * (10000, 1) = (300, 1)</code></p>
 <h3 id="构建词嵌表"><a href="#构建词嵌表" class="headerlink" title="构建词嵌表"></a>构建词嵌表</h3><p>可以通过训练神经网络的方式构建词嵌表<code>E</code>，这次换个方式，先放图</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-learn-embedding.png" alt="vector-similarity"></p>
+<p><img src="/images/seq-model/w2-learn-embedding.png" alt="vector-similarity"></p>
 <p>在这个训练模式中，是通过全部的单词去预测最后一个单词然后反向传播更新词嵌表E</p>
 <p>假设要预测的单词为W，词嵌表仍然为E，需要注意的是训练词嵌表和预测W是两个不同的任务。</p>
 <p>如果任务是预测W，最佳方案是使用W前面n个单词构建语境。</p>
@@ -255,7 +255,7 @@
 <p>$f(x_{ij})$ 存在是为了防止当 $x_{ij} = 0$ 时上面的式子等于0而不是无穷大。</p>
 <p>在接下来的两节中将会介绍用到了这些技术的应用。</p>
 <h3 id="情绪分类"><a href="#情绪分类" class="headerlink" title="情绪分类"></a>情绪分类</h3><p>情绪分类是指将一段文字要表达的情绪通过RNN识别出来。比如说我们开了一家餐厅，在微博上有很多人给我们留言，现在的任务是将这些留言以分数的形式量化(1 ～ 5分),以便做更好的改良，在RNN的帮助下可以做到这一点</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-sentiment.png" alt="Attention Model"></p>
+<p><img src="/images/seq-model/w2-sentiment.png" alt="Attention Model"></p>
 <p>这是一个“多对单”的应用，输入一句话，输出一个分数。</p>
 <h3 id="词嵌的去偏见化"><a href="#词嵌的去偏见化" class="headerlink" title="词嵌的去偏见化"></a>词嵌的去偏见化</h3><p>因为RNN通常是通过大量的网络数据文本集进行训练得到的，所以很多时候文本集中的偏见会反映在词嵌以及最终的结果中，例如</p>
 <p>如果：“男人“ 对应 “医生”， 那么“女人” 对应 什么？<br>RNN: “女人” 对应 “护士”。</p>
@@ -267,22 +267,22 @@
 <li>使定义化的词据离移动的词距离相等</li>
 </ol>
 <p>上述的描述有些抽象，在作业中会有专门针对这一部分的练习。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w2-debiasing.png" alt="Debiasing"></p>
+<p><img src="/images/seq-model/w2-debiasing.png" alt="Debiasing"></p>
 <hr>
 <h3 id="第三周（最后一周啦！）"><a href="#第三周（最后一周啦！）" class="headerlink" title="第三周（最后一周啦！）"></a>第三周（最后一周啦！）</h3><h3 id="序列对序列"><a href="#序列对序列" class="headerlink" title="序列对序列"></a>序列对序列</h3><p>假设需要翻译下面这句话</p>
 <p>“简将要在9月访问中国”</p>
 <p>我们希望得到的结果是</p>
 <p>“Jane is visiting China in September”</p>
 <p>在这个例子中输入的数量是10个中文汉字，输出为6个单词，$T_x$ 与 $T_y$ 数量不一致，就需要用到序列对序列的RNN模型</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-seq2seq.png" alt="Sequence to Sequence"></p>
+<p><img src="/images/seq-model/w3-seq2seq.png" alt="Sequence to Sequence"></p>
 <p>类似的例子还有用机器为下面这张图片生成描述</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-huhu.jpg" alt="Attention Model"></p>
+<p><img src="/images/seq-model/w3-huhu.jpg" alt="Attention Model"></p>
 <p>只需要将encoder部分用一个CNN模型替换就可以了，比如AlexNet，就可以得到“一只（可爱的）猫躺在楼梯上”</p>
 <h3 id="选择最优句子"><a href="#选择最优句子" class="headerlink" title="选择最优句子"></a>选择最优句子</h3><p>下面将之前学习的语言模型和机器翻译模型做一个对比, P为概率</p>
 <p>语言模型：</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-language-model.png" alt="Language Model"></p>
+<p><img src="/images/seq-model/w3-language-model.png" alt="Language Model"></p>
 <p>机器翻译模型：</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-machine-translation.png" alt="Machine Translation Model"></p>
+<p><img src="/images/seq-model/w3-machine-translation.png" alt="Machine Translation Model"></p>
 <p>可以看到，机器翻译模型的后半部分其实就是语言模型，Andrew将其称之为“条件语言模型”，在语言模型之前有一个条件也就是被翻译的句子:</p>
 <p>$P(y^{[1]}, …, y^{[T_y]} | x^{[1]}, …, x^{[T_x]})$</p>
 <p>注意，与语言模型不同的是，机器模型在输出部分不再使用softmax随机分布的形式进行取样，因为很容易得到一个不准确的翻译，取而代之的是使用Beam Search做最优化的选择。</p>
@@ -298,7 +298,7 @@
 <ul>
 <li>第三步：<br>继续这个过程… $P(y^{[3]} | x, y^{[1]}, y^{[2]})$</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-beam-search.png" alt="Beam Search"></p>
+<p><img src="/images/seq-model/w3-beam-search.png" alt="Beam Search"></p>
 <p>在实际应用和科研中beam width可能从10~3000不等</p>
 <h3 id="调试-Beam-Search"><a href="#调试-Beam-Search" class="headerlink" title="调试 Beam Search"></a>调试 Beam Search</h3><p>由于在每一步计算的都是一个概率，那么最后得到一个翻译出来句子的概率就是：</p>
 <p>$arg \underset{y}{max} \prod_{t=1}^{Ty} P(y^{[t]} | x, y^{[1]}, … , y^{[t-1]})$</p>
@@ -321,10 +321,10 @@
 </ol>
 <p>如果是这种结果说明RNN给出的就是y^(不准确的结果)，所以是RNN部分出现了问题</p>
 <h3 id="Attention-Model-二合一"><a href="#Attention-Model-二合一" class="headerlink" title="Attention Model(二合一)"></a>Attention Model(二合一)</h3><p>通过之前的学习可以看到机器翻译是将所有要翻译的内容统一输入然后再开始生成结果，但这样有一个弊端就是在句子特别长的时候后面的内容有的时候无法翻译的特别的准确。通过搭建attention model可以解决这个问题：</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-attn-model.png" alt="Attention Model"></p>
+<p><img src="/images/seq-model/w3-attn-model.png" alt="Attention Model"></p>
 <p>如图所示，这是一个双向的rnn，并且在普通rnn的基础上增加attention层，将阶段性的输入部分转化为输出，这样的方式也更符合人类的翻译过程。</p>
 <p>让我们拿出细节部分仔细的理解一下，首先是attention层，也就是下图中$context^{[t]}$，每一个attention单元接受三个单词的输入所以也称作语境单元（context），$\alpha$ 是每单个输入词在语境单元中占得权重。对每一个语境单元t来说，因为$\alpha$ 是通过softmax决定的，所以 $\sum_{i=1}^{T_x} \alpha^{t, i} = 1$。这里决定最终每一个单词占得语境权重仍然是通过一个小型的神经网络来进行计算并且最后得到的。</p>
-<p><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-attn-cell.png" alt="Attention Cell"></p>
+<p><img src="/images/seq-model/w3-attn-cell.png" alt="Attention Cell"></p>
 <p>输出的$context^{[t]}$ 进入到下一层Post LSTM 这一步就和之前学习过的那样子，将前一步的输出与这一步经过重重分析的输入综合到一起产生这一步的输出。</p>
 <p>让我们评估一下attention model： 由于结构的复杂，计算量与时间比普通的语言模型要多和慢许多。不过对于机器翻译来说，由于每一句话并不会特别特比特的长，所以有的时候稍微慢一点也不是完全无法接受:p</p>
 <p>一个很重要attention model的应用就是语音识别，人通过麦克风输入一句话让机器来翻译输入的内容，让我们来看一下是如何实现的</p>
@@ -336,7 +336,7 @@
 <p>上面的这个序列其实代表的是“a cat”，注意中间的<code>[space]</code>对应了翻译中的空格，重复的字母和“_”都是可以被压缩的。</p>
 <h3 id="唤醒词检测"><a href="#唤醒词检测" class="headerlink" title="唤醒词检测"></a>唤醒词检测</h3><p>例如苹果的siri，谷歌的google home都有自己独特的唤醒词</p>
 <p>“Hey Siri” 或者 “Okay Google”</p>
-<p>最后让我们看下如何训练rnn可以检测到这些唤醒词，假设下图式训练集中的一段音频，其中包含了两次唤醒词<br><img src="https://raw.githubusercontent.com/leyuan/blog/master/coursera-rnn/images/w3-trigger-word.png" alt="w3-trigger-word"></p>
+<p>最后让我们看下如何训练rnn可以检测到这些唤醒词，假设下图式训练集中的一段音频，其中包含了两次唤醒词<br><img src="/images/seq-model/w3-trigger-word.png" alt="w3-trigger-word"></p>
 <p>搭建一个attention model，在听到唤醒词之前一直输出的是0，在听到唤醒词以后输出1，但因为一个唤醒词会持续半秒左右所以我们也不仅仅只输出一次1，而是将输出的1持续一段时间，通过这样的方式训练出的rnn就可以很有效的检测到唤醒词了。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>感谢吴恩达和他的团队给我们带来这么好的教程，希望这篇笔记对你有所帮助 :)</p>
 </div></div><script type="text/x-mathjax-config">
